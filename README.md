@@ -29,43 +29,32 @@ pip install -r requirements.txt
 
 The pre-trained model weights are available in the repository. Download the weights and place them in the appropriate directory.
 
-```bash
-# Example command to download weights
-wget <link_to_model_weights>
-```
+
 
 ### 2. Run the Gradio Demo
 
 To interactively test the models using Gradio:
 
 ```bash
-python demo.py
+python app.py
 ```
+
+#### Notes:
+- **GPU Requirement**: If using a GPU, ensure it has at least **16GB of VRAM** to run the model efficiently.
+- **CPU-Only Mode**: If you wish to run the demo on CPU, set the environment variable `CUDA_VISIBLE_DEVICES` to `-1`:
+
+```bash
+CUDA_VISIBLE_DEVICES=-1 python app.py
+``` 
+
 
 This will launch a web interface where you can upload remote sensing images and view the segmentation results.
 
-### 3. Fine-tune the Model
-
-You can fine-tune the models on your own datasets. Refer to the `train.py` script for instructions and configuration options.
-
-```bash
-python train.py --config configs/config.yaml
-```
-
-### 4. Evaluate the Model
-
-Evaluate the model on your test set using the `evaluate.py` script:
-
-```bash
-python evaluate.py --weights <path_to_weights> --data <path_to_test_data>
-```
 
 ## Gradio Demo
 
 The Gradio demo allows users to upload remote sensing images, run cloud segmentation, and visualize the results. It can be easily modified to suit custom datasets or tasks.
 
-### Example Screenshot:
-*Add a screenshot of the demo interface here if available.*
 
 ## Citation
 
@@ -82,9 +71,5 @@ primaryClass={cs.CV},
 url={https://arxiv.org/abs/2411.13127}
 }
 ```
-
-## Acknowledgements
-
-This project builds upon vision foundation models and uses open-source libraries for training and evaluation. Special thanks to the research community for their contributions to remote sensing and computer vision.
 
 

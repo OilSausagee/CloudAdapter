@@ -20,7 +20,9 @@ This repository contains the pre-trained model weights for the [Cloud-Adapter](h
 ```bash
 git clone https://huggingface.co/XavierJiezou/cloud-adapter-models
 cd cloud-adapter-models
-pip install -r requirements.txt
+mkdir envs
+tar -xzf envs.tar.gz -C envs
+source envs/bin/activate
 ```
 
 ## Usage
@@ -33,8 +35,8 @@ python app.py
 
 If you use our code or models in your research, please cite with:
 
-```latex
-@misc{zou2024adaptingvisionfoundationmodels,
+```bib
+@misc{cloud-adapter,
       title={Adapting Vision Foundation Models for Robust Cloud Segmentation in Remote Sensing Images}, 
       author={Xuechao Zou and Shun Zhang and Kai Li and Shiying Wang and Junliang Xing and Lei Jin and Congyan Lang and Pin Tao},
       year={2024},

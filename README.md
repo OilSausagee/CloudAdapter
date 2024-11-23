@@ -10,7 +10,6 @@ base_model:
 - facebook/dinov2-large
 ---
 
-
 # Cloud Adapter Models
 
 This repository contains the pre-trained model weights for the [Cloud-Adapter](https://xavierjiezou.github.io/Cloud-Adapter/).

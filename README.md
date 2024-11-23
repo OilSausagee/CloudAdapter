@@ -48,12 +48,7 @@ CUDA_VISIBLE_DEVICES=-1 python app.py
 ``` 
 
 
-This will launch a web interface where you can upload remote sensing images and view the segmentation results.
-
-
-## Gradio Demo
-
-The Gradio demo allows users to upload remote sensing images, run cloud segmentation, and visualize the results. It can be easily modified to suit custom datasets or tasks.
+This will launch a web interface where you can upload remote sensing images and view the segmentation results.The Gradio demo allows users to upload remote sensing images, run cloud segmentation, and visualize the results. It can be easily modified to suit custom datasets or tasks.
 
 
 ## Citation

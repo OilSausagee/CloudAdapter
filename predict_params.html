@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: sans-serif; padding: 16px; background: #fff; color: #111; }
+.toolbar { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.filter-btn { font-size: 12px; padding: 4px 12px; border-radius: 20px; border: 1px solid #ccc; background: transparent; color: #555; cursor: pointer; transition: all 0.15s; }
+.filter-btn.active, .filter-btn:hover { background: #f0f0f0; color: #111; border-color: #999; font-weight: 500; }
+.example-btn { font-size: 12px; padding: 4px 12px; border-radius: 20px; border: 1px solid #ccc; background: transparent; color: #555; cursor: pointer; }
+.example-btn:hover { background: #f0f0f0; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
+th { text-align: left; padding: 8px 12px; font-weight: 600; font-size: 12px; color: #666; border-bottom: 1px solid #e0e0e0; }
+td { padding: 10px 12px; border-bottom: 1px solid #e8e8e8; color: #111; vertical-align: top; word-break: break-word; }
+tr:last-child td { border-bottom: none; }
+tr.hidden { display: none; }
+tr:not(.hidden):hover td { background: #fafafa; }
+.row-section td { background: #f5f5f5; padding: 6px 12px; font-size: 11px; font-weight: 600; color: #666; letter-spacing: 0.04em; text-transform: uppercase; border-bottom: 1px solid #e0e0e0; }
+code { font-family: monospace; font-size: 12px; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; }
+.badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; display: inline-block; white-space: nowrap; }
+.b-req  { background: #fde8e0; color: #7a2e10; }
+.b-opt  { background: #e0f5ec; color: #0a5235; }
+.b-flag { background: #e0edf8; color: #0c3e70; }
+.table-wrap { border: 1px solid #e0e0e0; border-radius: 10px; overflow: hidden; }
+.cmd-label { font-size: 11px; color: #666; margin-bottom: 6px; font-weight: 600; }
+.cmd-box { background: #f5f5f5; border: 1px solid #e0e0e0; border-radius: 8px; padding: 10px 14px; font-family: monospace; font-size: 12px; color: #111; line-height: 1.8; word-break: break-all; white-space: pre-wrap; }
+.highlight { background: #faeeda; color: #412402; border-radius: 3px; padding: 0 2px; }
+</style>
+</head>
+<body>
+
+<div class="toolbar" id="toolbar">
+  <button class="filter-btn active" data-filter="all">全部</button>
+  <button class="filter-btn" data-filter="path">路徑</button>
+  <button class="filter-btn" data-filter="model">模型</button>
+  <button class="filter-btn" data-filter="io">輸入 / 輸出</button>
+  <button class="filter-btn" data-filter="flag">旗標</button>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th style="width:22%">參數</th>
+        <th style="width:34%">預設值</th>
+        <th style="width:32%">說明</th>
+        <th style="width:12%">類型</th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+      <tr class="row-section" data-cat="path"><td colspan="4">基本路徑</td></tr>
+      <tr data-cat="path">
+        <td><code>--base</code></td>
+        <td><code>.</code>（當前目錄）</td>
+        <td>專案根目錄，其他路徑從這裡自動組合</td>
+        <td><span class="badge b-req">必填</span></td>
+      </tr>
+
+      <tr class="row-section" data-cat="model"><td colspan="4">模型設定</td></tr>
+      <tr data-cat="model">
+        <td><code>--profile</code></td>
+        <td><code>l1c</code></td>
+        <td>衛星類型：<code>l1c</code> / <code>l8</code> / <code>binary</code></td>
+        <td><span class="badge b-opt">選填</span></td>
+      </tr>
+      <tr data-cat="model">
+        <td><code>--config</code></td>
+        <td><code>{base}/model/multi_classes_512x512.py</code></td>
+        <td>覆寫 config 檔路徑</td>
+        <td><span class="badge b-opt">選填</span></td>
+      </tr>
+      <tr data-cat="model">
+        <td><code>--ckpt</code></td>
+        <td><code>{base}/checkpoint/l1c_full_weight.pth</code></td>
+        <td>覆寫 checkpoint 路徑</td>
+        <td><span class="badge b-opt">選填</span></td>
+      </tr>
+      <tr data-cat="model">
+        <td><code>--model-dir</code></td>
+        <td><code>{base}/model</code></td>
+        <td>覆寫 model 目錄</td>
+        <td><span class="badge b-opt">選填</span></td>
+      </tr>
+
+      <tr class="row-section" data-cat="io"><td colspan="4">輸入 / 輸出</td></tr>
+      <tr data-cat="io">
+        <td><code>--input</code></td>
+        <td><code>{base}/data</code></td>
+        <td>輸入資料夾或單張圖片路徑</td>
+        <td><span class="badge b-opt">選填</span></td>
+      </tr>
+      <tr data-cat="io">
+        <td><code>--output</code></td>
+        <td><code>{base}/outputs</code></td>
+        <td>輸出根目錄（自動建立 mask/ 和 viz/）</td>
+        <td><span class="badge b-opt">選填</span></td>
+      </tr>
+      <tr data-cat="io">
+        <td><code>--mask-dir</code></td>
+        <td><code>{output}/mask</code></td>
+        <td>單獨指定 mask 輸出位置</td>
+        <td><span class="badge b-opt">選填</span></td>
+      </tr>
+      <tr data-cat="io">
+        <td><code>--viz-dir</code></td>
+        <td><code>{output}/viz</code></td>
+        <td>單獨指定視覺化輸出位置</td>
+        <td><span class="badge b-opt">選填</span></td>
+      </tr>
+
+      <tr class="row-section" data-cat="flag"><td colspan="4">旗標</td></tr>
+      <tr data-cat="flag">
+        <td><code>--no-viz</code></td>
+        <td>不加 = 產生視覺化</td>
+        <td>加了只輸出 mask，不產生視覺化圖片</td>
+        <td><span class="badge b-flag">旗標</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="cmd-label" style="margin-top: 18px;">範例指令預覽</div>
+<div class="cmd-box" id="cmd-preview">!envs/bin/python predict.py --base <span class="highlight">"/your/base/path"</span></div>
+
+<div class="toolbar" style="margin-top: 10px;">
+  <button class="example-btn" onclick="setExample('basic')">最簡單</button>
+  <button class="example-btn" onclick="setExample('l8')">換 profile</button>
+  <button class="example-btn" onclick="setExample('single')">單張圖片</button>
+  <button class="example-btn" onclick="setExample('noviz')">不產生視覺化</button>
+  <button class="example-btn" onclick="setExample('full')">完整參數</button>
+</div>
+
+<script>
+const BASE = '"/content/drive/MyDrive/.../CloudAdapter"';
+const HL = `<span class="highlight">${BASE}</span>`;
+const examples = {
+  basic:  `!envs/bin/python predict.py --base ${BASE}`,
+  l8:     `!envs/bin/python predict.py --base ${BASE} --profile l8`,
+  single: `!envs/bin/python predict.py --base ${BASE} \\\n  --input "/content/my_image.png"`,
+  noviz:  `!envs/bin/python predict.py --base ${BASE} --no-viz`,
+  full:   `!envs/bin/python predict.py \\\n  --base ${BASE} \\\n  --profile l1c \\\n  --input "/content/data" \\\n  --output "/content/results" \\\n  --no-viz`,
+};
+const hlExamples = {};
+Object.keys(examples).forEach(k => {
+  hlExamples[k] = examples[k].replace(BASE, HL);
+});
+
+function setExample(key) {
+  document.getElementById('cmd-preview').innerHTML = hlExamples[key];
+}
+
+document.getElementById('toolbar').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn || !btn.dataset.filter) return;
+  document.querySelectorAll('.filter-btn[data-filter]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const f = btn.dataset.filter;
+  document.querySelectorAll('#tbody tr').forEach(row => {
+    if (f === 'all') { row.classList.remove('hidden'); return; }
+    row.classList.toggle('hidden', row.dataset.cat !== f);
+  });
+});
+</script>
+</body>
+</html>
